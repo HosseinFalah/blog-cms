@@ -1,7 +1,9 @@
 /* eslint-disable react/prop-types */
 import { Link } from "react-router-dom"
+import ShowTime from "./ShowTime"
+import ShowAuthor from "./ShowAuthor"
 
-const Card = ({id, title, content}) => {
+const Card = ({id, title, content, date, user}) => {
     return (
         <div className="w-full h-full pb-5 pt-14 lg:pb-7">
             <div className="relative flex flex-col h-full rounded-xl bg-gradient-to-tr from-amber-600 to-rose-400">
@@ -24,10 +26,10 @@ const Card = ({id, title, content}) => {
                             className="block w-10 h-10 object-cover rounded-full"
                             alt="پروفایل مدرس"
                         />
-                        <div className="flex flex-col font-medium justify-center gap-1">
-                            <span className="text-sm">نویسنده:</span>
-                            <p className="text-sm lg:text-base">حسین فلاح</p>
-                        </div>
+                        <ShowAuthor userId={user}/>
+                    </div>
+                    <div className="mb-5">
+                        <ShowTime timestamp={date}/>
                     </div>
                     <div className="grid mb-5">
                         <button className="flex items-center justify-center gap-x-2.5 bg-blue-800 transition-all duration-300 ease-in-out py-3 px-8 rounded-xl drop-shadow-2xl text-white focus:ring-2 ring-blue-800">

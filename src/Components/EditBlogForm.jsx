@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { blogUpdated } from "src/Features/blog/blogSlice";
+import { blogUpdated, selectBlogById } from "src/Features/blog/blogSlice";
 
 
 const EditBlogForm = () => {
@@ -10,12 +10,10 @@ const EditBlogForm = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const blogs = useSelector(state => state.blogs);
-    const blog = blogs.find(blog => blog.id === blogId);
+    const blog = useSelector(state => selectBlogById(state, blogId));
 
     const [title, setTitle] = useState(blog.title);
     const [content, setContent] = useState(blog.content);
-
 
     const handleEditBlog = (e) => {
         e.preventDefault();
