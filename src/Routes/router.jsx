@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
-import { NotFound } from "src/Components";
+import { NotFound, Blog, CraeteBlogForm, EditBlogForm } from "src/Components";
 import RootLayout from "src/Container/Layouts/RootLayout";
-import App from "src/App";
+import { Home } from "src/Pages";
 
 const router = createBrowserRouter([
     {
@@ -9,7 +9,10 @@ const router = createBrowserRouter([
         element: <RootLayout/>,
         errorElement: <NotFound/>,
         children: [
-            {path: '/', element: <App/>}
+            {path: '/', element: <Home/>},
+            {path: '/blogs/:blogId', element: <Blog/>},
+            {path: '/blogs/:create-blog', element: <CraeteBlogForm/>},
+            {path: '/edit-blog/:blogId', element: <EditBlogForm/>}
         ]
     }
 ])

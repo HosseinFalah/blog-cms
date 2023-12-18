@@ -3,7 +3,7 @@ import { Navbar } from "src/Components";
 
 const RootLayout = () => {
   return (
-    <div>
+    <div className="min-h-screen bg-zinc-600">
         <Navbar/>
         <main>
             <Outlet/>
