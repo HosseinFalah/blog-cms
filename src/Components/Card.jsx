@@ -35,9 +35,9 @@ const Card = ({id, title, content, date, user, reactions}) => {
                     </div>
                     <ReactionButtons blogId={id} reactions={reactions}/>
                     <div className="grid mb-5">
-                        <button className="flex items-center justify-center gap-x-2.5 bg-blue-800 transition-all duration-300 ease-in-out py-3 px-8 rounded-xl drop-shadow-2xl text-white focus:ring-2 ring-blue-800">
+                        <Link to={`/blogs/${id}`} className="flex items-center justify-center gap-x-2.5 bg-blue-700 transition-all duration-300 ease-in-out py-3 px-8 rounded-xl drop-shadow-2xl text-white hover:ring-4 ring-blue-500">
                             مشاهده
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>

@@ -1,8 +1,9 @@
 import { useSelector } from "react-redux";
+import { selectUserById } from "src/Features/blog/userSlice";
 
 const ShowAuthor = ({userId}) => {
-    const author = useSelector(state => state.users.find(user => user.id === userId));
-
+    const author = useSelector(state => selectUserById(state, userId));
+    
     return (
         <div className="flex flex-col font-medium justify-center gap-1">
             <span className="text-sm">نویسنده:</span>

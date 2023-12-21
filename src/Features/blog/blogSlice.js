@@ -1,32 +1,16 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
+import { getAllBlogs } from "src/Services/blogsServices";
 
 const initialState = {
-    blogs: [
-        { 
-            id: nanoid(),
-            date: new Date().toISOString(),
-            title: 'نست جی اس (NestJS)',
-            content: `نکست جی اس
-            همونطور که گفتم، یکی از محاسن ریکت این بود که هر قابلیتی که بخوایم به پروژمون اضافه کنیم براحتی یه پکیج براش پیدا میشه تا جایی که الان وقتی میخوایم یه پروژه ریکتی استارت بزنیم نیاز به نصب پیکیج های متعددی داریم .
-            
-            این دوست جدیدمون خیلی از این فیچرهای مهم رو داخل خودش داره بدون نیاز به نصب هیچ پکیج  خاص، با عملکرد بهتر و پرفرمنس بالاتر(روتینگ – استایلینگ -  اعتبارسنجی و ...)
-            
-            یکی از شاخصه های پروژه های ریکتی سرعت بالای اوناست، هر تغییری در صفحه بخواد اتفاق بیفته ، بدون ریلود مجدد فقط المان مورد نظر ما دیتای جدید رو میگیره و این رو مدیون منطق خودش برای انجام عملیات آنی هست تا بتونه یک سینگل پیج اپلیکیشن یا وب اپلیکیشن تک صفحه ای بسازه.
-            
-            تا وقتی که بخوایم وب اپلیکیشن های کوچیک و بزرگ و کاربر محور طراحی کنیم هیچ مشکلی نیست ولی ریکت اونقدر محبوب شده که برای طراحی وبسایت های بزرگ تجاری هم ازش استفاده میشه که تا حد زیادی SEO براشون مهمه یعنی باید توی موتورهای جستجو براحتی پیدا بشن.
-            
-            چون ریکت عملیات رندر و تازه سازی صفحه رو بدون ریلود انجام میده، در لحظه اول لود صفحه هیچ دیتایی رو به خزنده های موتور جستجو نشون نمیده (البته این چالشیه که همه تکنولوژی های SPA دارن)`,
-            user: 1,
-            reactions: {
-                thumbsUp: 0,
-                hooray: 0,
-                heart: 0,
-                rocket: 0,
-                eyes: 0
-            }
-        }
-    ]
+    blogs: [],
+    status: "idle",
+    error: null
 }
+
+export const fetchBlogs = createAsyncThunk('/blogs/fetchBlogs', async () => {
+    const response = await getAllBlogs();
+    return response.data;
+})
 
 const blogsSlice = createSlice({
     name: "blogs",
@@ -71,6 +55,20 @@ const blogsSlice = createSlice({
                 existingBlog.reactions[reaction]++;
             }
         }
+    },
+    extraReducers: builder => {
+        builder
+            .addCase(fetchBlogs.pending, (state, action) => {
+                state.status = "loading"
+            })
+            .addCase(fetchBlogs.fulfilled, (state, action) => {
+                state.status = "completed";
+                state.blogs = action.payload;
+            })
+            .addCase(fetchBlogs.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message;
+            })
     }
 });
 

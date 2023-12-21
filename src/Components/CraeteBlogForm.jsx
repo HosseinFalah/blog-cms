@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { blogAdded } from "src/Features/blog/blogSlice";
 import { toast } from "react-toastify";
+import { selectAllUsers } from "src/Features/blog/userSlice";
 
 const CraeteBlogForm = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const users = useSelector(state => state.users);
+    const users = useSelector(state => selectAllUsers(state));
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");

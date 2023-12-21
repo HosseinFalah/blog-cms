@@ -1,9 +1,19 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchBlogs, selectAllBlogs } from "src/Features/blog/blogSlice";
 import Card from "./Card";
-import { selectAllBlogs } from "src/Features/blog/blogSlice";
 
 const Blogs = () => {
+    const dispatch = useDispatch();
+
     const blogs = useSelector(state => selectAllBlogs(state));
+    const blogStatus = useSelector(state => state.blogs.status);
+
+    useEffect(() => {
+        if (blogStatus === "idle") {
+            dispatch(fetchBlogs());
+        }
+    }, [blogStatus, dispatch]);
 
     // Sort Blog Date
     const orderedBlogs = blogs.slice().sort((a,b) => b.date.localeCompare(a.date));
