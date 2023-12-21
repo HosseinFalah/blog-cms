@@ -4,3 +4,4 @@ export { default as Blogs } from "./Blogs";
 export { default as Blog } from "./Blog";
 export { default as CraeteBlogForm } from "./CraeteBlogForm";
 export { default as EditBlogForm } from "./EditBlogForm";
+export { default as ReactionButtons } from "./ReactionButtons";

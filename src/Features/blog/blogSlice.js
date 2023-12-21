@@ -16,7 +16,14 @@ const initialState = {
             تا وقتی که بخوایم وب اپلیکیشن های کوچیک و بزرگ و کاربر محور طراحی کنیم هیچ مشکلی نیست ولی ریکت اونقدر محبوب شده که برای طراحی وبسایت های بزرگ تجاری هم ازش استفاده میشه که تا حد زیادی SEO براشون مهمه یعنی باید توی موتورهای جستجو براحتی پیدا بشن.
             
             چون ریکت عملیات رندر و تازه سازی صفحه رو بدون ریلود انجام میده، در لحظه اول لود صفحه هیچ دیتایی رو به خزنده های موتور جستجو نشون نمیده (البته این چالشیه که همه تکنولوژی های SPA دارن)`,
-            user: 1
+            user: 1,
+            reactions: {
+                thumbsUp: 0,
+                hooray: 0,
+                heart: 0,
+                rocket: 0,
+                eyes: 0
+            }
         }
     ]
 }
@@ -55,6 +62,14 @@ const blogsSlice = createSlice({
         blogDeleted: (state, action) => {
             const { id } = action.payload;
             state.blogs = state.blogs.filter(blog => blog.id !== id);
+        },
+        reactionAdded: (state, action) => {
+            const { blogId, reaction } = action.payload;
+            const existingBlog = state.blogs.find(blog => blog.id === blogId);
+            
+            if (existingBlog) {
+                existingBlog.reactions[reaction]++;
+            }
         }
     }
 });
@@ -63,6 +78,6 @@ export const selectAllBlogs = (state) => state.blogs.blogs;
 export const selectBlogById = (state, blogId) => 
     state.blogs.blogs.find(blog => blog.id === blogId);
 
-export const { blogAdded, blogUpdated, blogDeleted } = blogsSlice.actions;
+export const { blogAdded, blogUpdated, blogDeleted, reactionAdded } = blogsSlice.actions;
 
 export default blogsSlice.reducer;
