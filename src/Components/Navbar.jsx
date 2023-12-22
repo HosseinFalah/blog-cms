@@ -21,7 +21,7 @@ const Navbar = () => {
                                 <Link to={`/`}>احراز هویت</Link>
                             </li>
                             <li>
-                                <Link to={`/`}>کاربران</Link>
+                                <Link to={`/users`}>کاربران</Link>
                             </li>
                         </ul>
                     </div>

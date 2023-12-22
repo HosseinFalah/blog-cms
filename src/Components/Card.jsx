@@ -21,7 +21,7 @@ const Card = ({id, title, content, date, user, reactions}) => {
                         </div>
                         <h3 className="mt-5 w-full text-base lg:text-xl font-bold text-white">{title}</h3>
                     </Link>
-                    <h3 className="mt-5 w-full text-sm font-bold text-white">{content.slice(0, 60)}...</h3>
+                    <h3 className="mt-5 w-full text-sm font-bold text-white">{content?.slice(0, 60)}...</h3>
                     <div className="my-5 flex text-white gap-2">
                         <img
                             src="/image/profile.jpg"
