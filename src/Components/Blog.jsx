@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import BlogNotFound from "./BlogNotFound";
-import { blogDeleted, selectBlogById } from "src/Features/blog/blogSlice";
-import { toast } from "react-toastify";
+import { deleteBlogById, selectBlogById } from "src/Features/blog/blogSlice";
+import toast from "react-hot-toast";
 import ShowAuthor from "./ShowAuthor";
 const Blog = () => {
     const dispatch = useDispatch();
@@ -17,9 +17,14 @@ const Blog = () => {
 
     const handleDelete = () => {
         if (blog) {
-            dispatch(blogDeleted({id: blog.id}));
-            toast.success('بلاگ با موفقعیت حذف شد');
-            navigate('/');
+            try {                
+                dispatch(deleteBlogById(blog.id));
+                toast.success('بلاگ با موفقعیت حذف شد');
+                navigate('/');
+            } catch (error) {
+                console.log(error);
+                toast.error('مشکلی در حذف بلاگ پیش امده');
+            }
         }
     }
 

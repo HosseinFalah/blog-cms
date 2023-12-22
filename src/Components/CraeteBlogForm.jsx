@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { nanoid } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
-import { blogAdded } from "src/Features/blog/blogSlice";
-import { toast } from "react-toastify";
+import { addNewBlog } from "src/Features/blog/blogSlice";
+import toast from "react-hot-toast";
 import { selectAllUsers } from "src/Features/blog/userSlice";
 
 const CraeteBlogForm = () => {
@@ -14,17 +15,39 @@ const CraeteBlogForm = () => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [userId, setUserId] = useState("");
+    const [requestStatus, setRequestStatus] = useState("idle");
 
-    const canSaveForm = [title, content, userId].every(Boolean);
+    const canSaveForm = [title, content, userId].every(Boolean) && requestStatus === "idle";
 
-    const handleCreateBlog = () => {
+    const handleCreateBlog = async () => {
         if (canSaveForm) {
-            dispatch(blogAdded(title, content, +userId));
-            toast.success('بلاگ جدید با موفقعیت ساخته شد');
-            setTitle("");
-            setContent("");
-            setUserId("");
-            navigate('/');
+            try {
+                setRequestStatus("pending");
+                await dispatch(addNewBlog({ 
+                    id: nanoid(),
+                    date: new Date().toISOString(),
+                    title, 
+                    content, 
+                    user: userId,
+                    reactions: {
+                        thumbsUp: 0,
+                        hooray: 0,
+                        heart: 0,
+                        rocket: 0,
+                        eyes: 0
+                    }
+                }));
+                toast.success('بلاگ جدید با موفقعیت ساخته شد');
+                setTitle("");
+                setContent("");
+                setUserId("");
+                navigate('/');
+            } catch (error) {
+                toast.error('مشکلی در هنگام ساخت بلاگ به وجود امده');
+                console.log(error);
+            } finally {
+                setRequestStatus("idle");
+            }
         }
     }
 
@@ -61,7 +84,7 @@ const CraeteBlogForm = () => {
                         </select>
                     </div>
                     <button 
-                        className="bg-purple-700 rounded-xl py-3 px-8 disabled:bg-purple-400 disabled:opacity-80" 
+                        className="bg-purple-600 py-3 px-6 rounded-xl mt-5 transition-all duration-300 ease-in-out hover:ring-4 ring-purple-500" 
                         onClick={handleCreateBlog}
                         disabled={!canSaveForm}>ذخیره پست</button>
                 </form>

@@ -1,7 +1,8 @@
 import { useState } from "react"
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { blogUpdated, selectBlogById } from "src/Features/blog/blogSlice";
+import { selectBlogById, updateBlogById } from "src/Features/blog/blogSlice";
 
 
 const EditBlogForm = () => {
@@ -18,8 +19,26 @@ const EditBlogForm = () => {
     const handleEditBlog = (e) => {
         e.preventDefault();
         if (title && content) {
-            dispatch(blogUpdated({ id: blogId, title, content }));
-            navigate(`/blogs/${blogId}`);
+            try {
+                dispatch(updateBlogById({ 
+                    id: blogId, 
+                    date: blog.date,
+                    title, 
+                    content, 
+                    user: blog.user,
+                    reactions: {
+                        thumbsUp: 0,
+                        hooray: 0,
+                        heart: 0,
+                        rocket: 0,
+                        eyes: 0
+                    }
+                }));
+                toast.success('بلاگ با موفقعیت ویرایش شد');
+                navigate(`/`);
+            } catch (error) {
+                toast.error('مشکلی در ویرایش بلاگ به وجود امده است');
+            }
         }
     }
 
@@ -47,7 +66,7 @@ const EditBlogForm = () => {
                             onChange={(e) => setContent(e.target.value)}></textarea>
                     </div>
                     <button 
-                        className="bg-purple-700 rounded-xl py-3 px-8" 
+                        className="bg-purple-600 py-3 px-6 rounded-xl mt-5 transition-all duration-300 ease-in-out hover:ring-4 ring-purple-500" 
                         onClick={handleEditBlog}>ویرایش پست</button>
                 </form>
             </div>

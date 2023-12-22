@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { reactionAdded } from "src/Features/blog/blogSlice";
 
 const reactionEmoji = {
