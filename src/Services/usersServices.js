@@ -10,3 +10,13 @@ export const getAllUsers = () => {
 export const getUser = (userId) => {
     return apiRequest.get(`/users/${userId}`);
 }
+// @desc Craete New User
+// @route POST http://localhost:9000/users
+export const craeteUser = (user) => {
+    return apiRequest.post('/users', user);    
+}
+// @desc Delete User
+// @route DELETE http://localhost:9000/users
+export const deleteUser = (userId) => {
+    return apiRequest.delete(`/users/${userId}`);
+}

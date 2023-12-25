@@ -12,8 +12,6 @@ const User = () => {
     
     const relatedBlogs = blogs.find(blog => blog.user === userId);
     
-    console.log(relatedBlogs);
-    
     return (
         <div className="xl:max-w-screen-xl m-auto px-4 xl:px-0">
             <div className="flex flex-col gap-4 mt-10">

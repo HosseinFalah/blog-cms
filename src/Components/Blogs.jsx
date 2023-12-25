@@ -20,7 +20,7 @@ const Blogs = () => {
     const orderedBlogs = blogs.slice().sort((a,b) => b.date.localeCompare(a.date));
 
     if (blogStatus === "loading") {
-        return <Spinner/>
+        return <Spinner isFullScreen={true}/>
     }
 
     return (
