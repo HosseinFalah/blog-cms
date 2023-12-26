@@ -30,47 +30,7 @@ export const updateBlogById = createAsyncThunk('/blogs/updateBlogById', async in
 const blogsSlice = createSlice({
     name: "blogs",
     initialState,
-    reducers: {
-        blogAdded: {
-            reducer(state, action) {
-                state.blogs.push(action.payload)
-            },
-            prepare(title, content, userId) {
-                // Complex Logix
-                return {
-                    payload: {
-                        id: nanoid(),
-                        date: new Date().toISOString(),
-                        title,
-                        content,
-                        user: userId
-                    }
-                }
-            }
-        },
-        blogUpdated: (state, action) => {
-            const { id, title, content } = action.payload;
-
-            const existingBlog = state.blogs.find(blog => blog.id === id);
-
-            if (existingBlog) {
-                existingBlog.title = title;
-                existingBlog.content = content;
-            }
-        },
-        blogDeleted: (state, action) => {
-            const { id } = action.payload;
-            state.blogs = state.blogs.filter(blog => blog.id !== id);
-        },
-        reactionAdded: (state, action) => {
-            const { blogId, reaction } = action.payload;
-            const existingBlog = state.blogs.find(blog => blog.id === blogId);
-            
-            if (existingBlog) {
-                existingBlog.reactions[reaction]++;
-            }
-        }
-    },
+    reducers: {},
     extraReducers: builder => {
         builder
             .addCase(fetchBlogs.pending, (state, action) => {
