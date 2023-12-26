@@ -30,7 +30,16 @@ export const updateBlogById = createAsyncThunk('/blogs/updateBlogById', async in
 const blogsSlice = createSlice({
     name: "blogs",
     initialState,
-    reducers: {},
+    reducers: {
+        reactionAdded: (state, action) => {
+            const { blogId, reaction } = action.payload;
+            const existingBlog = state.blogs.find(blog => blog.id === blogId);
+
+            if (existingBlog) {
+                existingBlog.reactions[reaction]++;
+            }
+        }
+    },
     extraReducers: builder => {
         builder
             .addCase(fetchBlogs.pending, (state, action) => {
