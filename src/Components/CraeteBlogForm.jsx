@@ -1,29 +1,28 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { nanoid } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
-import { addNewBlog } from "src/Features/blog/blogSlice";
 import toast from "react-hot-toast";
 import { selectAllUsers } from "src/Features/blog/userSlice";
+import { useAddNewBlogMutation } from "src/Api/apiSlice";
 
 const CraeteBlogForm = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const [addNewBlog, { isLoading }] = useAddNewBlogMutation();
 
     const users = useSelector(state => selectAllUsers(state));
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [userId, setUserId] = useState("");
-    const [requestStatus, setRequestStatus] = useState("idle");
-
-    const canSaveForm = [title, content, userId].every(Boolean) && requestStatus === "idle";
+    
+    const canSaveForm = [title, content, userId].every(Boolean) && !isLoading;
 
     const handleCreateBlog = async () => {
         if (canSaveForm) {
             try {
-                setRequestStatus("pending");
-                await dispatch(addNewBlog({ 
+                await addNewBlog({ 
                     id: nanoid(),
                     date: new Date().toISOString(),
                     title, 
@@ -36,7 +35,7 @@ const CraeteBlogForm = () => {
                         rocket: 0,
                         eyes: 0
                     }
-                }));
+                }).unwrap();
                 toast.success('بلاگ جدید با موفقعیت ساخته شد');
                 setTitle("");
                 setContent("");
@@ -45,8 +44,6 @@ const CraeteBlogForm = () => {
             } catch (error) {
                 toast.error('مشکلی در هنگام ساخت بلاگ به وجود امده');
                 console.log(error);
-            } finally {
-                setRequestStatus("idle");
             }
         }
     }

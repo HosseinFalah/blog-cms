@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useGetBlogQuery } from "src/Api/apiSlice";
+import { useGetBlogsQuery } from "src/Api/apiSlice";
 import Card from "./Card";
 import Spinner from "./Spinner";
 
@@ -10,7 +10,7 @@ const Blogs = () => {
         isSuccess,
         isError,
         error
-    } = useGetBlogQuery();
+    } = useGetBlogsQuery();
 
     const sortedBlogs = useMemo(() => {
         const sortedBlogs = blogs.slice();
