@@ -1,34 +1,33 @@
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchBlogs, selectAllBlogs } from "src/Features/blog/blogSlice";
+import { useMemo } from "react";
+import { useGetBlogQuery } from "src/Api/apiSlice";
 import Card from "./Card";
 import Spinner from "./Spinner";
 
 const Blogs = () => {
-    const dispatch = useDispatch();
+    const {
+        data: blogs = [],
+        isLoading,
+        isSuccess,
+        isError,
+        error
+    } = useGetBlogQuery();
 
-    const blogs = useSelector(state => selectAllBlogs(state));
-    const blogStatus = useSelector(state => state.blogs.status);
+    const sortedBlogs = useMemo(() => {
+        const sortedBlogs = blogs.slice();
+        return sortedBlogs.sort((a, b) => b.date.localeCompare(a.date));
+    }, [blogs])
 
-    useEffect(() => {
-        if (blogStatus === "idle") {
-            dispatch(fetchBlogs());
-        }
-    }, [blogStatus, dispatch]);
-
-    // Sort Blog Date
-    const orderedBlogs = blogs.slice().sort((a,b) => b.date.localeCompare(a.date));
-
-    if (blogStatus === "loading") {
+    if (isLoading) {
         return <Spinner isFullScreen={true}/>
     }
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 px-4 xl:px-0">
-            {blogs && orderedBlogs.map(blog => (
+            {isSuccess && sortedBlogs.map(blog => (
                 <Card key={blog.id} {...blog}/>
             ))}
             {!blogs.length && <h1 className="text-2xl font-semibold text-center">هیچ بلاگی ساخته نشده😊</h1>}
+            {isError && <h4 className="text-2xl text-red-400 font-semibold text-center">خطا مشکلی پیش آمده😊{error}</h4>}
         </div>
     )
 }
