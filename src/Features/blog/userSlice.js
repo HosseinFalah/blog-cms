@@ -1,5 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { craeteUser, deleteUser, getAllUsers } from "src/Services/usersServices";
+
+const userAdaptor = createEntityAdapter();
 
 export const fetchUsers = createAsyncThunk('/users/fetchUsers', async () => {
     const { data } = await getAllUsers();
@@ -16,25 +18,24 @@ export const addNewUser = createAsyncThunk('/users/addNewUser', async (initialUs
     return data;
 })
 
+const initialState = userAdaptor.getInitialState();
+
 const usersSlice = createSlice({
     name: "users",
-    initialState: [],
+    initialState,
     reducers: {},
     extraReducers: builder => {
         builder
-        .addCase(fetchUsers.fulfilled, (state, action) => {
-            return action.payload;
-        })
-        .addCase(addNewUser.fulfilled, (state, action) => {
-            state.push(action.payload);
-        })
-        .addCase(deleteUserById.fulfilled, (state, action) => {
-            return state.filter(user => user.id !== action.payload)
-        })
+        .addCase(fetchUsers.fulfilled, userAdaptor.setAll)
+        .addCase(addNewUser.fulfilled, userAdaptor.addOne)
+        .addCase(deleteUserById.fulfilled, userAdaptor.removeOne)
     }
 });
 
-export const selectAllUsers = state => state.users;
-export const selectUserById = (state, userId) => state.users.find(user => user.id === userId);
+export const {
+    selectAll: selectAllUsers,
+    selectById: selectUserById,
+
+} = userAdaptor.getSelectors(state => state.users);
 
 export default usersSlice.reducer;
