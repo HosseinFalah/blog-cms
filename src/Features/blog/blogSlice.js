@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, createSelector } from "@reduxjs/toolkit";
 import { createBlog, deleteBlog, getAllBlogs, updateBlog } from "src/Services/blogsServices";
 
 const initialState = {
@@ -62,6 +62,11 @@ const blogsSlice = createSlice({
 export const selectAllBlogs = (state) => state.blogs.blogs;
 export const selectBlogById = (state, blogId) => 
     state.blogs.blogs.find(blog => blog.id === blogId);
+    
+export const selectUserBlogs = createSelector(
+    [selectAllBlogs, (_, userId) => userId],
+    (blogs, userId) => blogs.filter(blog => blog.user === userId)
+)
 
 export const { blogAdded, blogUpdated, blogDeleted, reactionAdded } = blogsSlice.actions;
 
