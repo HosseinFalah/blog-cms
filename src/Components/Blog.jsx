@@ -1,13 +1,11 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import BlogNotFound from "./BlogNotFound";
-import { deleteBlogById, selectBlogById } from "src/Features/blog/blogSlice";
 import toast from "react-hot-toast";
+import { useDeleteBlogMutation, useGetBlogQuery } from "src/Api/apiSlice";
+import { useParams, useNavigate } from "react-router-dom";
+import BlogNotFound from "./BlogNotFound";
 import ShowAuthor from "./ShowAuthor";
-import { useGetBlogQuery } from "src/Api/apiSlice";
 import Spinner from "./Spinner";
+
 const Blog = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const { blogId } = useParams();
     
@@ -18,10 +16,12 @@ const Blog = () => {
         isError
     } = useGetBlogQuery(blogId);
 
-    const handleDelete = () => {
+    const [deleteBlog] = useDeleteBlogMutation();
+
+    const handleDelete = async () => {
         if (blog) {
-            try {                
-                dispatch(deleteBlogById(blog.id));
+            try {
+                await deleteBlog(blogId);
                 toast.success('بلاگ با موفقعیت حذف شد');
                 navigate('/');
             } catch (error) {
