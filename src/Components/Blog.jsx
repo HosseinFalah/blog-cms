@@ -14,7 +14,8 @@ const Blog = () => {
     const {
         data: blog,
         isLoading,
-        isSuccess
+        isSuccess,
+        isError
     } = useGetBlogQuery(blogId);
 
     const handleDelete = () => {
@@ -33,7 +34,7 @@ const Blog = () => {
     return (
         <div className="bg-zinc-600 text-white">
             {isLoading && <Spinner isFullScreen={true}/>}
-            {!blog && <BlogNotFound/>}
+            {isError && <BlogNotFound/>}
             {isSuccess && (
                 <div className="max-w-screen-xl m-auto px-4 xl:px-0">
                     <div className="pt-10">

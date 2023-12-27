@@ -1,26 +1,25 @@
 import { useState } from "react"
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { selectBlogById, updateBlogById } from "src/Features/blog/blogSlice";
+import { useEditBlogMutation, useGetBlogQuery } from "src/Api/apiSlice";
 
 
 const EditBlogForm = () => {
     const { blogId } = useParams();
 
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const blog = useSelector(state => selectBlogById(state, blogId));
+    const { data: blog } = useGetBlogQuery(blogId);
+    const [updateBlog, { isLoading }] = useEditBlogMutation();
 
     const [title, setTitle] = useState(blog.title);
     const [content, setContent] = useState(blog.content);
 
-    const handleEditBlog = (e) => {
+    const handleEditBlog = async (e) => {
         e.preventDefault();
         if (title && content) {
             try {
-                dispatch(updateBlogById({ 
+                await updateBlog({ 
                     id: blogId, 
                     date: blog.date,
                     title, 
@@ -33,7 +32,7 @@ const EditBlogForm = () => {
                         rocket: 0,
                         eyes: 0
                     }
-                }));
+                });
                 toast.success('بلاگ با موفقعیت ویرایش شد');
                 navigate(`/`);
             } catch (error) {
