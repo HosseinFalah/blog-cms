@@ -26,13 +26,14 @@ export const apiSlice = createApi({
                 {type: "BLOG", id: arg.id},
 
             ]
-        }),
+        })
     })
 });
 
-export const { 
+export const {
     useGetBlogsQuery, 
     useGetBlogQuery, 
     useAddNewBlogMutation, 
-    useEditBlogMutation
+    useEditBlogMutation,
+    useGetUsersQuery
 } = apiSlice;

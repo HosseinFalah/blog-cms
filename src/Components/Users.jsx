@@ -1,13 +1,12 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { nanoid } from "@reduxjs/toolkit";
-import { useSelector, useDispatch } from "react-redux";
-import { addNewUser, deleteUserById, selectAllUsers } from "src/Features/blog/userSlice";
+import { useSelector } from "react-redux";
+import { selectAllUsers } from "src/Features/blog/userSlice";
 import Spinner from "./Spinner";
 
 const Users = () => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     const [fullname, setFullname] = useState('');
     const [image, setImage] = useState('');
@@ -22,21 +21,21 @@ const Users = () => {
         setLoading(false);
     };
 
-    const handleCreateUser = () => {
-        if (canSave) {
-            dispatch(addNewUser({ id: nanoid(), fullname, image, email}));
-            toast.success('کاربر جدید با موفقیت ساخته شد');
-            setFullname("");
-            setImage("");
-            setEmail("");
-        }
-    }
+    // const handleCreateUser = () => {
+    //     if (canSave) {
+    //         dispatch(addNewUser({ id: nanoid(), fullname, image, email}));
+    //         toast.success('کاربر جدید با موفقیت ساخته شد');
+    //         setFullname("");
+    //         setImage("");
+    //         setEmail("");
+    //     }
+    // }
 
-    const handleRemoveUser = (userId) => {
-        console.log(userId);
-        dispatch(deleteUserById(userId));
-        toast.success("کاربر با موفقعیت حذف شد");
-    }
+    // const handleRemoveUser = (userId) => {
+    //     console.log(userId);
+    //     dispatch(deleteUserById(userId));
+    //     toast.success("کاربر با موفقعیت حذف شد");
+    // }
 
     return (
         <div className="xl:max-w-screen-xl m-auto px-4 xl:px-0">
@@ -78,7 +77,7 @@ const Users = () => {
                     </div>
                     <button 
                         className="bg-purple-600 mt-4 py-2.5 px-6 rounded-xl text-white font-bold transition-all duration-300 ease-in-out disabled:bg-purple-500 disabled:opacity-60"
-                        onClick={handleCreateUser}
+                        // onClick={handleCreateUser}
                         disabled={!canSave}>
                             ساخت کاربر جدید
                     </button>
@@ -103,7 +102,8 @@ const Users = () => {
                             <div className="grid">
                                 <button 
                                     className="bg-red-500 text-white font-semibold mt-4 rounded-lg py-2.5"
-                                    onClick={() => handleRemoveUser(user.id)}>
+                                    // onClick={() => handleRemoveUser(user.id)}
+                                    >
                                         حذف کاربر
                                 </button>
                             </div>

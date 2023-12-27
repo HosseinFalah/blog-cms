@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "src/Api/apiSlice";
 import blogsReducer from "src/Features/blog/blogSlice";
-import usersReducer, { fetchUsers } from "src/Features/blog/userSlice";
+import usersReducer, { extendedApiSlice } from "src/Features/blog/userSlice";
 
 export const store = configureStore({
     reducer: {
@@ -12,5 +12,5 @@ export const store = configureStore({
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(apiSlice.middleware)
 });
 
-// Fetch All Users from api
-store.dispatch(fetchUsers());
+// Fetch All Users & Blogs from api
+store.dispatch(extendedApiSlice.endpoints.getUsers.initiate());

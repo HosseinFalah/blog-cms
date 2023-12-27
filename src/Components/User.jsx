@@ -1,7 +1,9 @@
+import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from 'react-router-dom';
+import { createSelector } from "@reduxjs/toolkit";
+import { useGetBlogsQuery } from "src/Api/apiSlice";
 import { selectUserById } from "src/Features/blog/userSlice";
-import { selectUserBlogs } from "src/Features/blog/blogSlice";
 import Card from "./Card";
 
 const User = () => {
@@ -9,7 +11,22 @@ const User = () => {
 
     const user = useSelector(state => selectUserById(state, userId));
     
-    const relatedBlogs = useSelector(state => selectUserBlogs(state, userId));
+    const selectUserBlogs = useMemo(() => {
+        const emptyArray = [];
+
+        return createSelector(
+            res => res.data,
+            (res, userId) => userId,
+            (data, userId) => data?.filter(blog => blog.user === userId) ?? emptyArray
+        );
+    }, []);
+
+    const { relatedBlogs } = useGetBlogsQuery(undefined, {
+        selectFromResult: result => ({
+            ...result,
+            relatedBlogs: selectUserBlogs(result, userId)
+        })
+    })
 
     return (
         <div className="xl:max-w-screen-xl m-auto px-4 xl:px-0">

@@ -1,41 +1,36 @@
-import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import { craeteUser, deleteUser, getAllUsers } from "src/Services/usersServices";
+import { createSlice, createSelector, createEntityAdapter } from "@reduxjs/toolkit";
+import { apiSlice } from "src/Api/apiSlice";
 
 const userAdaptor = createEntityAdapter();
 
-export const fetchUsers = createAsyncThunk('/users/fetchUsers', async () => {
-    const { data } = await getAllUsers();
-    return data;
-})
-
-export const deleteUserById = createAsyncThunk('/users/deleteUserById', async (initialUserId) => {
-    await deleteUser(initialUserId);
-    return initialUserId;
-})
-
-export const addNewUser = createAsyncThunk('/users/addNewUser', async (initialUser) => {
-    const { data } = await craeteUser(initialUser);
-    return data;
-})
-
 const initialState = userAdaptor.getInitialState();
+
+export const extendedApiSlice = apiSlice.injectEndpoints({
+    endpoints: builder => ({
+        getUsers: builder.query({
+            query: () => "/users",
+            transformResponse: responseData => {
+                return userAdaptor.setAll(initialState, responseData)
+            }
+        })
+    })
+})
+
+export const selectUsersResult = extendedApiSlice.endpoints.getUsers.select();
 
 const usersSlice = createSlice({
     name: "users",
     initialState,
-    reducers: {},
-    extraReducers: builder => {
-        builder
-        .addCase(fetchUsers.fulfilled, userAdaptor.setAll)
-        .addCase(addNewUser.fulfilled, userAdaptor.addOne)
-        .addCase(deleteUserById.fulfilled, userAdaptor.removeOne)
-    }
+    reducers: {}
 });
 
-export const {
-    selectAll: selectAllUsers,
-    selectById: selectUserById,
+const selectUsersData = createSelector(selectUsersResult, usersResult => usersResult.data);
 
-} = userAdaptor.getSelectors(state => state.users);
+export const { 
+    selectAll: selectAllUsers,
+    selectById: selectUserById
+} = userAdaptor.getSelectors(state => selectUsersData(state) ?? initialState);
+
+export const { useGetUsersQuery } = extendedApiSlice;
 
 export default usersSlice.reducer;
